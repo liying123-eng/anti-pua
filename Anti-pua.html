@@ -3,225 +3,491 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>反PUA能力自测 - 你的自我保护指数</title>
+    <title>🛡️ 反PUA能力自测 - 你的防御指数</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
             min-height: 100vh;
-            color: #333;
+            color: #fff;
             padding: 20px;
+            overflow-x: hidden;
+        }
+
+        /* 动态背景 */
+        .bg-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: float 15s infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
         }
 
         .container {
-            max-width: 600px;
+            max-width: 650px;
             margin: 0 auto;
-            background: #fff;
-            border-radius: 20px;
-            padding: 30px 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px 30px;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            z-index: 1;
         }
 
-        h1 {
+        /* 标题样式 */
+        .main-title {
             text-align: center;
-            font-size: 1.6rem;
-            background: linear-gradient(45deg, #667eea, #764ba2);
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+            background: linear-gradient(45deg, #e94560, #ff6b6b, #feca57);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
+            text-shadow: 0 0 30px rgba(233, 69, 96, 0.5);
         }
 
         .subtitle {
             text-align: center;
-            color: #888;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+            margin-bottom: 30px;
+        }
+
+        /* PUA手法标签 */
+        .pua-tags {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .pua-tag {
+            background: rgba(233, 69, 96, 0.2);
+            border: 1px solid rgba(233, 69, 96, 0.4);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #ff6b6b;
+            transition: all 0.3s;
+        }
+
+        .pua-tag:hover {
+            background: rgba(233, 69, 96, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* 进度条 */
+        .progress-container {
+            margin-bottom: 30px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
             font-size: 0.9rem;
-            margin-bottom: 25px;
+            color: rgba(255, 255, 255, 0.8);
         }
 
         .progress-bar {
-            background: #eee;
+            background: rgba(255, 255, 255, 0.1);
             height: 8px;
             border-radius: 4px;
-            margin-bottom: 25px;
             overflow: hidden;
         }
 
         .progress-fill {
-            background: linear-gradient(90deg, #667eea, #764ba2);
+            background: linear-gradient(90deg, #e94560, #ff6b6b);
             height: 100%;
             border-radius: 4px;
-            transition: width 0.3s;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 15px rgba(233, 69, 96, 0.5);
         }
 
+        /* 题目卡片 */
         .question-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .question-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
             margin-bottom: 20px;
+        }
+
+        .question-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #e94560, #ff6b6b);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
         }
 
         .question-num {
-            color: #667eea;
+            color: #ff6b6b;
             font-size: 0.85rem;
-            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .pua-type {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
         }
 
         .question-text {
-            font-size: 1.05rem;
-            font-weight: 500;
-            margin-bottom: 15px;
-            line-height: 1.5;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            margin-bottom: 25px;
+            color: #fff;
         }
 
+        /* 选项 */
         .options {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
         }
 
         .option {
-            background: #f8f9fa;
-            border: 2px solid transparent;
-            border-radius: 12px;
-            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            padding: 16px 20px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s;
             font-size: 0.95rem;
+            line-height: 1.5;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
         }
 
         .option:hover {
-            background: #eef;
-            border-color: #667eea;
+            background: rgba(233, 69, 96, 0.15);
+            border-color: rgba(233, 69, 96, 0.5);
+            transform: translateX(5px);
         }
 
         .option.selected {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            color: #fff;
-            border-color: #667eea;
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.3), rgba(255, 107, 107, 0.2));
+            border-color: #e94560;
+            box-shadow: 0 0 20px rgba(233, 69, 96, 0.3);
         }
 
+        .option-letter {
+            width: 28px;
+            height: 28px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        .option.selected .option-letter {
+            background: #e94560;
+        }
+
+        /* 开始页 */
+        .start-screen {
+            text-align: center;
+        }
+
+        .intro-box {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            text-align: left;
+        }
+
+        .intro-title {
+            color: #ff6b6b;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .intro-text {
+            color: rgba(255, 255, 255, 0.85);
+            line-height: 1.8;
+            font-size: 0.95rem;
+        }
+
+        .highlight {
+            color: #feca57;
+            font-weight: 600;
+        }
+
+        /* 按钮 */
         .btn {
-            background: linear-gradient(45deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #e94560, #ff6b6b);
             color: #fff;
             border: none;
-            padding: 15px 40px;
-            border-radius: 25px;
-            font-size: 1rem;
+            padding: 18px 50px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
             cursor: pointer;
-            display: block;
-            margin: 30px auto 0;
-            transition: transform 0.2s;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(233, 69, 96, 0.4);
         }
 
         .btn:hover {
-            transform: scale(1.05);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(233, 69, 96, 0.5);
         }
 
-        .hidden { display: none; }
-
-        .start-screen { text-align: center; }
-
-        .intro-text {
-            color: #666;
-            font-size: 1rem;
-            line-height: 1.8;
-            margin-bottom: 25px;
-            text-align: left;
+        .stats {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.85rem;
+            margin-top: 20px;
         }
 
-        .result-screen { text-align: center; }
+        /* 结果页 */
+        .result-screen {
+            text-align: center;
+        }
 
         .result-icon {
-            font-size: 4rem;
-            margin-bottom: 15px;
+            font-size: 5rem;
+            margin-bottom: 20px;
+            animation: bounce 1s ease;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
         }
 
         .result-title {
-            font-size: 1.5rem;
-            color: #667eea;
+            font-size: 1.8rem;
             margin-bottom: 10px;
+            background: linear-gradient(45deg, #e94560, #ff6b6b, #feca57);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .result-score {
-            font-size: 3rem;
-            color: #764ba2;
+            font-size: 4rem;
             font-weight: bold;
-            margin-bottom: 15px;
+            margin: 20px 0;
+            background: linear-gradient(45deg, #feca57, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .result-type {
+        .result-badge {
             display: inline-block;
-            padding: 10px 25px;
-            border-radius: 25px;
-            font-size: 1.1rem;
-            margin-bottom: 20px;
-            color: #fff;
+            padding: 10px 30px;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(233, 69, 96, 0.4); }
+            50% { box-shadow: 0 0 0 15px rgba(233, 69, 96, 0); }
         }
 
         .result-desc {
-            color: #666;
-            line-height: 1.8;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 25px;
             margin-bottom: 25px;
             text-align: left;
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 12px;
+            line-height: 1.8;
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        .ability-box {
-            background: linear-gradient(135deg, rgba(102,126,234,0.1) 0%, rgba(118,75,162,0.1) 100%);
-            border-radius: 12px;
-            padding: 20px;
+        .result-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 25px;
             margin-bottom: 20px;
             text-align: left;
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        .ability-title {
-            color: #667eea;
-            font-weight: bold;
+        .result-section-title {
+            color: #ff6b6b;
+            font-size: 1rem;
             margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ability-item {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .ability-item:last-child {
+            border-bottom: none;
+        }
+
+        .ability-icon {
+            font-size: 1.2rem;
         }
 
         .tips-box {
-            background: #d4edda;
-            border-left: 4px solid #28a745;
-            padding: 15px;
-            margin: 15px 0;
-            border-radius: 0 8px 8px 0;
+            background: linear-gradient(135deg, rgba(254, 202, 87, 0.15), rgba(255, 107, 107, 0.1));
+            border-left: 4px solid #feca57;
+            padding: 20px;
+            border-radius: 0 12px 12px 0;
+            margin: 20px 0;
             text-align: left;
+            line-height: 1.7;
+        }
+
+        .tips-title {
+            color: #feca57;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .disclaimer {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 25px;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.5);
+            text-align: left;
+            line-height: 1.6;
+        }
+
+        .hidden { display: none !important; }
+
+        /* 响应式 */
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px 20px;
+            }
+            .main-title {
+                font-size: 1.8rem;
+            }
+            .question-card {
+                padding: 20px;
+            }
+            .option {
+                padding: 14px 16px;
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- 动态背景粒子 -->
+    <div class="bg-particles" id="particles"></div>
+
     <div class="container">
         <!-- 开始页 -->
         <div class="start-screen" id="start-screen">
-            <h1>🛡️ 反PUA能力自测</h1>
-            <p class="subtitle">测测你的自我保护指数</p>
+            <h1 class="main-title">🛡️ 反PUA能力自测</h1>
+            <p class="subtitle">测测你的情感防御指数</p>
             
-            <div class="intro-text">
-                <p style="margin-bottom: 15px;"><strong>真正的强大，是拥有保护自己的能力。</strong></p>
-                <p style="margin-bottom: 15px;">这个测试通过15个真实场景，帮你识别PUA的常见手法：</p>
-                <p style="margin-bottom: 10px;">• 煤气灯效应：让你怀疑自己的记忆和判断</p>
-                <p style="margin-bottom: 10px;">• 内疚牵引：用"爱"的名义绑架你的行为</p>
-                <p style="margin-bottom: 10px;">• 道德绑架：用"如果你爱我"来胁迫</p>
-                <p style="margin-bottom: 10px;">• 边界破坏：逐步蚕食你的个人空间</p>
-                <p style="margin-bottom: 15px;">• 隔离包围：让你只依赖一个人</p>
-                <p><strong>了解自己在这些场景中的反应</strong>，学会保护自己，成为更强大的自己！💪</p>
+            <div class="pua-tags">
+                <span class="pua-tag">💡 煤气灯效应</span>
+                <span class="pua-tag">⛓️ 道德绑架</span>
+                <span class="pua-tag">🎭 边界破坏</span>
+                <span class="pua-tag">🔒 社交隔离</span>
+                <span class="pua-tag">💔 价值贬低</span>
+                <span class="pua-tag">😢 内疚诱导</span>
             </div>
 
-            <p style="color: #888; font-size: 0.9rem; margin-bottom: 20px;">已有 66,666 人参与测试</p>
+            <div class="intro-box">
+                <div class="intro-title">💪 为什么要做这个测试？</div>
+                <div class="intro-text">
+                    <p style="margin-bottom: 12px;">
+                        <span class="highlight">真正的强大，是拥有保护自己的能力。</span>
+                    </p>
+                    <p style="margin-bottom: 12px;">
+                        这个测试通过 <span class="highlight">16个真实场景</span>，带你识别亲密关系中最常见的 <span class="highlight">PUA操控手法</span>。
+                    </p>
+                    <p style="margin-bottom: 12px;">
+                        每个场景都来自真实的情感操控案例，看看你能在多大程度上 <span class="highlight">保持清醒、坚守底线、保护自己</span>。
+                    </p>
+                    <p>
+                        💡 这不是评判，而是 <span class="highlight">一次自我觉察的练习</span>。
+                    </p>
+                </div>
+            </div>
+
+            <button class="btn" onclick="startTest()">开始测试 →</button>
             
-            <button class="btn" onclick="startTest()">开始测试</button>
+            <p class="stats">已有 66,888 人参与测试</p>
             
-            <div style="color: #999; font-size: 0.75rem; margin-top: 30px;">
-                <strong>免责声明：</strong>本测试仅供娱乐参考，旨在提升自我保护意识，不能替代专业心理咨询。
+            <div class="disclaimer">
+                <strong>⚠️ 免责声明：</strong>本测试仅供娱乐参考，旨在提升自我保护意识，不能替代专业心理咨询。如有严重情感困扰，请寻求专业帮助。
             </div>
         </div>
 
         <!-- 测试页 -->
         <div class="hidden" id="quiz-screen">
-            <div class="progress-bar">
-                <div class="progress-fill" id="progress" style="width: 0%"></div>
+            <div class="progress-container">
+                <div class="progress-info">
+                    <span id="progress-text">问题 1/16</span>
+                    <span id="progress-percent">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                </div>
             </div>
             <div class="question-card" id="question-area"></div>
         </div>
@@ -231,156 +497,203 @@
     </div>
 
     <script>
-        // 15道情景化题目（融入PUA手法，故事更有趣）
+        // 创建背景粒子
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+                container.appendChild(particle);
+            }
+        }
+        createParticles();
+
+        // 16道情景化题目
         const questions = [
             {
-                text: '【煤气灯效应】TA说"你昨天根本没说过那话"，但你清楚记得。你会？',
+                icon: '💡',
+                puaType: '煤气灯效应',
+                text: 'TA说："你昨天根本没说过那话。" 但你清楚记得自己说过。你会？',
                 options: [
-                    { text: '坚持自己的记忆，不被动摇', score: 3 },
-                    { text: '有点困惑，但内心仍坚定', score: 2 },
-                    { text: '开始怀疑自己，觉得可能是自己记错了', score: 1 },
-                    { text: '完全否定自己，为TA辩解', score: 0 }
+                    { letter: 'A', text: '坚持自己的记忆，不被动摇，冷静回应"我记得我说过"', score: 3 },
+                    { letter: 'B', text: '有点困惑，但内心仍坚定，不急着认错', score: 2 },
+                    { letter: 'C', text: '开始怀疑自己，觉得可能是自己记错了', score: 1 },
+                    { letter: 'D', text: '完全否定自己，为TA道歉："可能我记错了"', score: 0 }
                 ]
             },
             {
-                text: '【边界测试】TA要求查看你的手机，说"真爱就没隐私"。你会？',
+                icon: '🔒',
+                puaType: '边界测试',
+                text: 'TA要求查看你的手机，说："真爱就没隐私，看你手机怎么了？" 你会？',
                 options: [
-                    { text: '明确拒绝，解释个人隐私权的重要性', score: 3 },
-                    { text: '妥协一部分信息，但保持底线', score: 2 },
-                    { text: '感到内疚，勉强交出手机', score: 1 },
-                    { text: '立刻交出，并为自己道歉', score: 0 }
+                    { letter: 'A', text: '明确拒绝，并解释信任不等于没有隐私', score: 3 },
+                    { letter: 'B', text: '妥协一部分信息，但核心隐私不给看', score: 2 },
+                    { letter: 'C', text: '感到内疚，勉强交出手机但心里不舒服', score: 1 },
+                    { letter: 'D', text: '立刻交出，并为自己有隐私感到抱歉', score: 0 }
                 ]
             },
             {
-                text: '【时间绑架】TA说"如果你真爱我，就每时每刻都要陪我"。你会？',
+                icon: '⏰',
+                puaType: '时间绑架',
+                text: 'TA说："如果你真爱我，就每时每刻都要陪我，不许有自己的事。" 你会？',
                 options: [
-                    { text: '拒绝，并解释健康关系需要个人空间', score: 3 },
-                    { text: '尽量配合，但保留一些私人时间', score: 2 },
-                    { text: '感到内疚，减少与朋友的见面', score: 1 },
-                    { text: '放弃所有个人计划，完全以TA为中心', score: 0 }
+                    { letter: 'A', text: '拒绝，并说明健康关系需要彼此空间', score: 3 },
+                    { letter: 'B', text: '尽量配合，但保留一些私人时间', score: 2 },
+                    { letter: 'C', text: '感到内疚，减少和朋友聚会来满足TA', score: 1 },
+                    { letter: 'D', text: '放弃所有个人计划，完全以TA为中心', score: 0 }
                 ]
             },
             {
-                text: '【道德绑架】TA说"你不同意我的想法，说明你不爱我"。你会？',
+                icon: '⛓️',
+                puaType: '道德绑架',
+                text: 'TA说："不同意我的想法？你根本不爱我！" 你会？',
                 options: [
-                    { text: '表达你的真实想法，这是不同意见很正常', score: 3 },
-                    { text: '委婉地表达，尝试找到折中方案', score: 2 },
-                    { text: '感到内疚，违心同意对方', score: 1 },
-                    { text: '立刻改口，为自己不同意感到道歉', score: 0 }
+                    { letter: 'A', text: '表达真实想法，意见不同很正常不等于不爱', score: 3 },
+                    { letter: 'B', text: '委婉表达，尝试找到折中方案', score: 2 },
+                    { letter: 'C', text: '感到内疚，违心地同意对方', score: 1 },
+                    { letter: 'D', text: '立刻改口，为自己"不同意见"道歉', score: 0 }
                 ]
             },
             {
-                text: '【自我价值评价】你做得不错，但TA说"你这样在我眼里一文不值"。你会？',
+                icon: '💔',
+                puaType: '价值贬低',
+                text: '你明明做得不错，TA却说："你这样在我眼里一文不值。" 你会？',
                 options: [
-                    { text: '相信自己的判断，不被贬低影响', score: 3 },
-                    { text: '有些受伤，但仍坚持自我认知', score: 2 },
-                    { text: '开始怀疑自己的能力和价值', score: 1 },
-                    { text: '完全失去自信，认为自己真的一无是处', score: 0 }
+                    { letter: 'A', text: '相信自己的判断，不被贬低言论影响', score: 3 },
+                    { letter: 'B', text: '有些受伤，但内心仍坚持自我认知', score: 2 },
+                    { letter: 'C', text: '开始怀疑自己的能力，真的觉得自己不行', score: 1 },
+                    { letter: 'D', text: '彻底失去自信，认为自己真的一无是处', score: 0 }
                 ]
             },
             {
-                text: '【外界声音隔离】闺蜜说"我觉得TA不太对劲"。你会？',
+                icon: '👥',
+                puaType: '外界隔离',
+                text: '闺蜜提醒你："我觉得TA不太对劲，你要小心。" 你会？',
                 options: [
-                    { text: '认真听取，客观评估关系', score: 3 },
-                    { text: '听进去，自己再观察判断', score: 2 },
-                    { text: '觉得闺蜜理解不了你们的爱', score: 1 },
-                    { text: '为TA辩解，减少与朋友的联系', score: 0 }
+                    { letter: 'A', text: '认真听取，客观评估这段关系', score: 3 },
+                    { letter: 'B', text: '听进去，自己再观察一段时间判断', score: 2 },
+                    { letter: 'C', text: '觉得闺蜜不理解你们的爱，不当回事', score: 1 },
+                    { letter: 'D', text: '为TA辩解，逐渐疏远提醒你的朋友', score: 0 }
                 ]
             },
             {
-                text: '【拒绝反应】你拒绝了TA的某个要求，TA一周不理你。你会？',
+                icon: '❄️',
+                puaType: '冷战惩罚',
+                text: '你拒绝了TA一个要求，TA一周都不理你。你会？',
                 options: [
-                    { text: '坚守底线，给彼此冷静空间', score: 3 },
-                    { text: '有些遗憾，但相信沟通会改善', score: 2 },
-                    { text: '感到恐慌，主动低眉顺眼求和解', score: 1 },
-                    { text: '立刻妥协原则，换来对方原谅', score: 0 }
+                    { letter: 'A', text: '坚守底线，给彼此冷静空间等待沟通', score: 3 },
+                    { letter: 'B', text: '有些遗憾，但相信冷静后能好好谈', score: 2 },
+                    { letter: 'C', text: '感到恐慌，主动低三下四求和解', score: 1 },
+                    { letter: 'D', text: '立刻妥协放弃原则，只要TA肯理我', score: 0 }
                 ]
             },
             {
-                text: '【社交隔离】TA的朋友逐渐消失，现在只有你和TA。你会？',
+                icon: '🔗',
+                puaType: '社交隔离',
+                text: 'TA的朋友们渐渐消失，现在你的世界里只有TA一个人。你会？',
                 options: [
-                    { text: '主动扩展社交圈，鼓励TA也这样做', score: 3 },
-                    { text: '能接受现状，但仍保持一些外界联系', score: 2 },
-                    { text: '感到孤独，但不好意思说出来', score: 1 },
-                    { text: '完全接受，觉得只要有TA就够了', score: 0 }
+                    { letter: 'A', text: '主动扩展社交圈，并鼓励TA也这样做', score: 3 },
+                    { letter: 'B', text: '能接受现状，但仍保持一些外界联系', score: 2 },
+                    { letter: 'C', text: '感到孤独，但不好意思说出来', score: 1 },
+                    { letter: 'D', text: '完全接受，觉得有TA就够了不需要别人', score: 0 }
                 ]
             },
             {
-                text: '【速冻关系】第一周就说"我爱你"、要见你家人、谈未来。你会？',
+                icon: '🚀',
+                puaType: '速冻关系',
+                text: '认识才一周，TA就说"我爱你"、要见家长、规划未来。你会？',
                 options: [
-                    { text: '保持理智，慢慢了解对方真实面目', score: 3 },
-                    { text: '开心但保有警惕心，观察对方的一致性', score: 2 },
-                    { text: '被甜言蜜语冲昏头脑，很快投入', score: 1 },
-                    { text: '完全沦陷，觉得这是真爱信号', score: 0 }
+                    { letter: 'A', text: '保持理智，认为太快了需要慢慢了解', score: 3 },
+                    { letter: 'B', text: '开心但保持警惕，观察TA言行是否一致', score: 2 },
+                    { letter: 'C', text: '被甜言蜜语冲昏头脑，很快投入感情', score: 1 },
+                    { letter: 'D', text: '完全沦陷，觉得这就是命中注定的真爱', score: 0 }
                 ]
             },
             {
-                text: '【专属化威胁】TA说"除了我没人会这样爱你，没人能理解你"。你会？',
+                icon: '👑',
+                puaType: '专属化威胁',
+                text: 'TA说："除了我没人会这样爱你，没人能理解你。" 你会？',
                 options: [
-                    { text: '保持清醒，知道世界很大有很多可能', score: 3 },
-                    { text: '感受到被重视，但不完全相信', score: 2 },
-                    { text: '内心被戳中，开始依赖这份"唯一"', score: 1 },
-                    { text: '彻底相信，害怕失去这个"唯一的爱"', score: 0 }
+                    { letter: 'A', text: '保持清醒，知道世界很大有很多可能', score: 3 },
+                    { letter: 'B', text: '感受到被重视，但不完全相信这话', score: 2 },
+                    { letter: 'C', text: '内心被戳中，开始依赖这份"唯一的爱"', score: 1 },
+                    { letter: 'D', text: '彻底相信，害怕失去这个"唯一的爱"', score: 0 }
                 ]
             },
             {
-                text: '【习得性无助】经常被指责"你做错了"，即使你没做错。你会？',
+                icon: '🎭',
+                puaType: '习得性无助',
+                text: 'TA经常说"你做错了"，即使你根本没做错。你会？',
                 options: [
-                    { text: '反复确认事实，理性回应', score: 3 },
-                    { text: '有时困惑，但会查证真相', score: 2 },
-                    { text: '逐渐相信自己确实做错了很多', score: 1 },
-                    { text: '放弃辩解，觉得自己本来就问题多', score: 0 }
+                    { letter: 'A', text: '反复确认事实，理性分析不被牵着走', score: 3 },
+                    { letter: 'B', text: '有时困惑，但会查证真相再判断', score: 2 },
+                    { letter: 'C', text: '逐渐相信自己确实做错了很多事', score: 1 },
+                    { letter: 'D', text: '放弃辩解，觉得自己本来就问题多', score: 0 }
                 ]
             },
             {
-                text: '【内疚诱导】TA说"如果你真爱我，应该为我做X事"。你会？',
+                icon: '😢',
+                puaType: '内疚诱导',
+                text: 'TA说："如果你真爱我，应该为我做X事。" 你会？',
                 options: [
-                    { text: '区分爱的本质，拒绝不合理要求', score: 3 },
-                    { text: '做一些力所能及的，但坚持底线', score: 2 },
-                    { text: '虽然不舒服，还是勉强做了', score: 1 },
-                    { text: '为了证明爱，不顾一切地满足', score: 0 }
+                    { letter: 'A', text: '区分爱的本质，拒绝不合理的道德绑架', score: 3 },
+                    { letter: 'B', text: '做一些力所能及的，但坚守底线', score: 2 },
+                    { letter: 'C', text: '虽然不舒服，还是勉强去做了', score: 1 },
+                    { letter: 'D', text: '为了证明爱，不顾一切地满足TA', score: 0 }
                 ]
             },
             {
-                text: '【投射指责】TA做了伤害你的事，反过来说"是你伤害了我"。你会？',
+                icon: '🎭',
+                puaType: '投射指责',
+                text: 'TA做了伤害你的事，却反过来指责你："是你伤害了我！" 你会？',
                 options: [
-                    { text: '保持清晰认知，不被反向指责迷惑', score: 3 },
-                    { text: '有些困惑，但坚持自己的感受', score: 2 },
-                    { text: '开始自责，觉得自己有问题', score: 1 },
-                    { text: '完全接受责任，为对方道歉', score: 0 }
+                    { letter: 'A', text: '保持清晰认知，不被反向指责迷惑', score: 3 },
+                    { letter: 'B', text: '有些困惑，但坚持自己的感受是真实的', score: 2 },
+                    { letter: 'C', text: '开始自责，觉得可能真的是自己的问题', score: 1 },
+                    { letter: 'D', text: '完全接受责任，反而为TA"受伤"道歉', score: 0 }
                 ]
             },
             {
-                text: '【自我蚕食】一段关系后，你发现自己越来越不自信、不快乐。你会？',
+                icon: '📉',
+                puaType: '自我蚕食',
+                text: '这段关系后，你发现自己越来越不自信、不快乐。你会？',
                 options: [
-                    { text: '认真评估，可能考虑离开这段关系', score: 3 },
-                    { text: '尝试沟通，希望对方和自己一起改善', score: 2 },
-                    { text: '觉得是自己不够好，加倍努力讨好', score: 1 },
-                    { text: '彻底否定自己，认为所有问题都是自己的错', score: 0 }
+                    { letter: 'A', text: '认真评估，考虑是否要离开这段关系', score: 3 },
+                    { letter: 'B', text: '尝试沟通，希望对方和自己一起改善', score: 2 },
+                    { letter: 'C', text: '觉得是自己不够好，加倍努力讨好', score: 1 },
+                    { letter: 'D', text: '彻底否定自己，认为所有问题都是自己造成的', score: 0 }
                 ]
             },
             {
-                text: '【可信息源】当有人给你建议时，你的判断标准是？',
+                icon: '⏳',
+                puaType: '拖延承诺',
+                text: 'TA一直说"改天给你交代/承诺/改变"，但一直没有任何行动。你会？',
                 options: [
-                    { text: '综合多方意见+自己的理性思考', score: 3 },
-                    { text: '听取多人意见，有所比较', score: 2 },
-                    { text: '主要听某个你信任的人的意见', score: 1 },
-                    { text: '完全依赖某一个人的判断', score: 0 }
+                    { letter: 'A', text: '明确追问期限，这是对你的尊重', score: 3 },
+                    { letter: 'B', text: '给对方一些时间，但会持续观察', score: 2 },
+                    { letter: 'C', text: '不好意思催促，继续无限期等待', score: 1 },
+                    { letter: 'D', text: '选择相信TA会改变，无限期等待下去', score: 0 }
                 ]
             },
             {
-                text: '【拖延承诺】TA一直说"改天给你一个交代/承诺/改变"，但一直没动静。你会？',
+                icon: '🎭',
+                puaType: '情绪操控',
+                text: 'TA每次吵架就摔东西、大哭、自残威胁："都是你逼我的！" 你会？',
                 options: [
-                    { text: '明确追问期限，这是尊重你的表现', score: 3 },
-                    { text: '给对方一些时间，但会持续观察', score: 2 },
-                    { text: '不好意思催促，继续等待', score: 1 },
-                    { text: '选择相信，无限期等待', score: 0 }
+                    { letter: 'A', text: '不被动摇，明确表示这不是健康的关系方式', score: 3 },
+                    { letter: 'B', text: '感到压力，但知道这是对方的责任', score: 2 },
+                    { letter: 'C', text: '被吓到，选择妥协来"安抚"对方', score: 1 },
+                    { letter: 'D', text: '彻底被控制，觉得一切都是自己的错', score: 0 }
                 ]
             }
         ];
 
         let currentQ = 0;
         let totalScore = 0;
+        const letters = ['A', 'B', 'C', 'D'];
 
         function startTest() {
             document.getElementById('start-screen').classList.add('hidden');
@@ -391,14 +704,26 @@
         function showQuestion() {
             const q = questions[currentQ];
             const progress = ((currentQ + 1) / questions.length) * 100;
-            document.getElementById('progress').style.width = progress + '%';
+            
+            document.getElementById('progress-text').textContent = `问题 ${currentQ + 1}/${questions.length}`;
+            document.getElementById('progress-percent').textContent = `${Math.round(progress)}%`;
+            document.getElementById('progress-fill').style.width = progress + '%';
 
             const optionsHtml = q.options.map((opt, idx) => 
-                `<div class="option" onclick="selectOption(${idx}, ${opt.score})">${opt.text}</div>`
+                `<div class="option" onclick="selectOption(${idx}, ${opt.score})">
+                    <span class="option-letter">${letters[idx]}</span>
+                    <span>${opt.text}</span>
+                </div>`
             ).join('');
 
             document.getElementById('question-area').innerHTML = `
-                <div class="question-num">问题 ${currentQ + 1}/${questions.length}</div>
+                <div class="question-header">
+                    <div class="question-icon">${q.icon}</div>
+                    <div>
+                        <div class="question-num">第 ${currentQ + 1} 题</div>
+                        <span class="pua-type">${q.puaType}</span>
+                    </div>
+                </div>
                 <div class="question-text">${q.text}</div>
                 <div class="options">${optionsHtml}</div>
             `;
@@ -415,7 +740,7 @@
                 } else {
                     showResult();
                 }
-            }, 300);
+            }, 400);
         }
 
         function showResult() {
@@ -425,91 +750,103 @@
             const maxScore = questions.length * 3;
             const percentage = Math.round((totalScore / maxScore) * 100);
 
-            let resultIcon, resultType, resultColor, resultTitle, resultDesc, abilities, tips;
+            let resultIcon, resultBadge, resultBadgeColor, resultTitle, resultDesc, abilities, tips;
 
             if (percentage >= 80) {
                 resultIcon = '👑';
-                resultType = '钻石级防御';
-                resultColor = '#28a745';
-                resultTitle = '你的自我保护状态很棒！';
-                resultDesc = '你拥有清晰的自我边界、稳定的内在价值感，在关系中能保持独立与清醒。这种自我状态让你更能享受健康的关系。';
+                resultBadge = '🛡️ 钻石级防御';
+                resultBadgeColor = 'linear-gradient(135deg, #feca57, #ff9f43)';
+                resultTitle = '你的情感防御能力非常强！';
+                resultDesc = '你拥有极其清晰的自我边界和超强的抗操控能力。在各种情感操控场景中，你都能保持清醒的头脑，不被动摇。这种自我状态让你既能享受健康的亲密关系，又能有效保护自己免受伤害。';
                 abilities = [
-                    '✅ 边界清晰：你知道自己的底线，并懂得维护',
-                    '✅ 内在稳定：你的价值感来源于自己，不依赖外界评价',
-                    '✅ 觉察敏锐：你能感知关系中的不适，及时调整',
-                    '✅ 敢于表达：你会为自己的感受发声'
+                    { icon: '✅', text: '边界清晰：你知道自己的底线，并坚决维护' },
+                    { icon: '✅', text: '内在稳定：你的价值感来源于自己，不受他人操控' },
+                    { icon: '✅', text: '觉察敏锐：你能第一时间识别情感操控的信号' },
+                    { icon: '✅', text: '行动果断：该拒绝时果断拒绝，不拖泥带水' },
+                    { icon: '✅', text: '情绪独立：不被他人的情绪勒索所左右' }
                 ];
-                tips = '继续保持这份自我觉察，为自己而活，活出最闪耀的样子！记住：你的价值不需要任何人来证明，你本身就是独一无二的存在。';
+                tips = '继续保持这份清醒和力量！你的存在本身就是对PUA最好的反击。同时，也请记得在保护自己的同时，给真心爱你的人一些耐心和信任。世界需要更多像你这样"人间清醒"的人 🌟';
             } else if (percentage >= 60) {
                 resultIcon = '🛡️';
-                resultType = '黄金级防御';
-                resultColor = '#17a2b8';
-                resultTitle = '你的自我保护意识不错';
-                resultDesc = '你具备一定的自我保护能力，大部分情况下能照顾好自己。在某些情境下可能会有些动摇，这是正常的成长空间。';
+                resultBadge = '✨ 黄金级防御';
+                resultBadgeColor = 'linear-gradient(135deg, #a29bfe, #6c5ce7)';
+                resultTitle = '你的情感防御能力不错！';
+                resultDesc = '你具备较好的自我保护意识，大部分情况下能照顾好自己。你的内心有一定的基础，但面对一些高段位的情感操控时，可能会有轻微动摇。这是很正常的，继续加强会更好。';
                 abilities = [
-                    '✅ 基本边界：你有自己的底线，偶尔会被突破',
-                    '✅ 相对独立：你重视自己，也会参考他人意见',
-                    '💡 成长点：面对强烈情感表达时，可以多一些观察时间'
+                    { icon: '✅', text: '基本边界：有自己的底线，偶尔会被突破' },
+                    { icon: '✅', text: '相对独立：重视自己，也会参考他人意见' },
+                    { icon: '💡', text: '成长点：面对"煤气灯效应"时可以更坚定' },
+                    { icon: '💡', text: '成长点：被内疚诱导时，练习说"这是你的感受，不是我的错"' }
                 ];
-                tips = '继续强化自我认知，练习表达真实感受。记住：你的感受很重要，你的需求值得被看见。为自己而活，不是自私，是对自己最大的负责。';
+                tips = '建议每天花10分钟做"自我肯定"练习，对着镜子说：我值得被尊重，我的感受很重要。当遇到让你不舒服的情况时，先深呼吸，然后问自己："这是健康的关系吗？"记住：你的感受永远是你最好的指南针 💎';
             } else if (percentage >= 40) {
                 resultIcon = '💡';
-                resultType = '需要关注与提升';
-                resultColor = '#ffc107';
-                resultTitle = '你的自我状态值得关注';
-                resultDesc = '你在关系中可能经常处于被动、压抑的状态，习惯优先考虑他人。这不是你的问题，而是可以调整的状态。';
+                resultBadge = '🌱 青铜级防御';
+                resultBadgeColor = 'linear-gradient(135deg, #81ecec, #00cec9)';
+                resultTitle = '你的情感防御能力需要加强';
+                resultDesc = '你在关系中可能经常处于被动、压抑的状态，习惯优先考虑他人而忽略自己的感受。这不是你的错，而是提醒我们：学会爱自己，是你需要练习的重要课题。';
                 abilities = [
-                    '💡 边界待清晰：你有时会为了和谐而委屈自己',
-                    '💡 价值感待稳固：你比较在意他人的看法和评价',
-                    '💡 表达待练习：你不太习惯为自己的感受发声'
+                    { icon: '💡', text: '边界待清晰：你经常为了和谐而委屈自己' },
+                    { icon: '💡', text: '价值感待稳固：你比较在意他人的看法和评价' },
+                    { icon: '💡', text: '表达待练习：你不太习惯为自己的感受发声' },
+                    { icon: '💡', text: '支持系统待加强：你可能为了某段关系减少了其他联系' }
                 ];
-                tips = '建议：1. 从小事开始，练习说"不"，你的感受很重要；2. 重建与亲友的联系，你不是一个人；3. 每天给自己一点独处时间，听听内心的声音。记住：为自己而活，是你与生俱来的权利。';
+                tips = '从今天开始，尝试这3件事：① 每天对自己说3次"我值得"；② 每周至少和朋友聚会一次；③ 当别人要求你做不想做的事时，练习说"让我考虑一下"（然后真的考虑）。记住：你不是任何人的附属品，你是一个独立的、有价值的人 🌱';
             } else {
-                resultIcon = '🌱';
-                resultType = '需要重视与提升';
-                resultColor = '#6c757d';
-                resultTitle = '请多关爱自己的状态';
-                resultDesc = '你目前在关系中容易处于被动、压抑的状态，可能忽视了自己的需求。这不是你的错，而是提醒我们：爱自己的能力需要学习和练习。';
+                resultIcon = '🌻';
+                resultBadge = '🌸 需要关注与成长';
+                resultBadgeColor = 'linear-gradient(135deg, #fd79a8, #e84393)';
+                resultTitle = '请多关爱自己的内心';
+                resultDesc = '你目前在关系中容易处于被动、压抑的状态，可能已经习惯了把他人需求放在第一位，忽略了自己的声音。这不是你的错，而是提醒你：是时候开始学着爱自己了。';
                 abilities = [
-                    '🌱 边界待建立：你习惯把他人的需求放在第一位',
-                    '🌱 自我认知待加强：你对自己的了解可能不够清晰',
-                    '🌱 支持系统待重建：你可能为了某段关系减少了其他联系'
+                    { icon: '🌱', text: '边界待建立：你习惯把他人的需求放在第一位' },
+                    { icon: '🌱', text: '自我认知待加强：你可能还不够了解自己' },
+                    { icon: '🌱', text: '支持系统待重建：你可能为了某段关系减少了其他联系' },
+                    { icon: '🌱', text: '自我价值待重塑：你需要重新认识自己的价值' }
                 ];
-                tips = '建议：1. 重新与信任的朋友、家人建立联系，你值得被支持；2. 每天对自己说：我值得被爱，我值得被尊重；3. 从小事开始，为自己做一次选择。记住：你的人生属于你自己，为自己而活，永远不晚。';
+                tips = '第一步：重新联系信任的朋友或家人，告诉他们你的感受，你不是一个人。第二步：每天对镜子里的自己说："我值得被爱，我值得被尊重。"第三步：当有人让你不舒服时，试着说"不"。第四步：记住，任何让你持续感到痛苦的关系，都不值得你为之牺牲自己。你比你想象的更强大 🌻';
             }
 
             document.getElementById('result-screen').innerHTML = `
                 <div class="result-icon">${resultIcon}</div>
-                <div class="result-title">${resultTitle}</div>
+                <h2 class="result-title">${resultTitle}</h2>
                 <div class="result-score">${percentage}%</div>
-                <div class="result-type" style="background: ${resultColor}">${resultType}</div>
+                <div class="result-badge" style="background: ${resultBadgeColor}">${resultBadge}</div>
                 
                 <div class="result-desc">
-                    <p style="font-size: 1.1rem; margin-bottom: 15px;"><strong>${resultDesc}</strong></p>
+                    <p style="font-size: 1.05rem; line-height: 1.8;">${resultDesc}</p>
                 </div>
                 
-                <div class="ability-box">
-                    <div class="ability-title">💪 你的状态分析</div>
-                    ${abilities.map(a => `<p style="margin-bottom: 8px;">${a}</p>`).join('')}
+                <div class="result-section">
+                    <div class="result-section-title">
+                        <span>📊</span> 你的防御能力分析
+                    </div>
+                    ${abilities.map(a => `
+                        <div class="ability-item">
+                            <span class="ability-icon">${a.icon}</span>
+                            <span>${a.text}</span>
+                        </div>
+                    `).join('')}
                 </div>
                 
                 <div class="tips-box">
-                    <strong>🌟 成长建议：</strong>${tips}
+                    <div class="tips-title">
+                        <span>🌟</span> 成长建议
+                    </div>
+                    <p>${tips}</p>
                 </div>
                 
-                <div style="background: linear-gradient(135deg, rgba(102,126,234,0.1) 0%, rgba(118,75,162,0.1) 100%); padding: 20px; border-radius: 12px; margin-bottom: 20px; text-align: left;">
-                    <p style="font-weight: bold; margin-bottom: 10px; color: #667eea;">💝 为自己而活</p>
+                <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; margin: 20px 0; text-align: left; line-height: 1.7;">
+                    <p style="color: #feca57; font-weight: 600; margin-bottom: 10px;">💝 为自己而活</p>
                     <p>你的人生不是为了让别人满意而存在的。</p>
                     <p style="margin-top: 10px;">你的感受很重要，你的需求值得被满足，你的梦想值得被追求。</p>
                     <p style="margin-top: 10px;">爱自己，是一生浪漫的开始。✨</p>
                 </div>
                 
-                <button class="btn" onclick="location.reload()">再测一次</button>
+                <button class="btn" onclick="location.reload()">再测一次 🔄</button>
                 
-                <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-top: 25px; text-align: left; color: #666; font-size: 0.8rem;">
-                    <p style="font-weight: bold; margin-bottom: 8px;">📋 免责声明</p>
-                    <p>本测试仅供娱乐参考，旨在提升自我保护意识，帮助用户了解自身状态。测试结果不代表任何专业心理诊断，不能替代专业心理咨询或医疗建议。</p>
-                    <p style="margin-top: 8px;">如有心理困扰，请及时寻求专业心理咨询师或医生的帮助。紧急情况请拨打当地心理援助热线或报警电话。</p>
+                <div class="disclaimer">
+                    <strong>⚠️ 免责声明：</strong>本测试仅供娱乐参考，旨在提升自我保护意识，不能替代专业心理咨询。如有严重情感困扰，请寻求专业心理咨询师或医生的帮助。
                 </div>
             `;
         }
